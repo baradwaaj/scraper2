@@ -12,7 +12,7 @@ def findItem(itemName):
         response = urllib2.urlopen(r)
     except:
         print "Internet connection error"
-        print response
+        print urllib2.urlopen(r)
         return
     thePage = response.read()
     soup = bs4.BeautifulSoup(thePage)
