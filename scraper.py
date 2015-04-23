@@ -1,23 +1,23 @@
-# This is a template for a Python scraper on morph.io (https://morph.io)
-# including some code snippets below that you should find helpful
+import sys
+import bs4
+import re
+import urllib2
 
-# import scraperwiki
-# import lxml.html
-#
-# # Read in a page
-# html = scraperwiki.scrape("http://foo.com")
-#
-# # Find something on the page using css selectors
-# root = lxml.html.fromstring(html)
-# root.cssselect("div[align='left']")
-#
-# # Write out to the sqlite database using scraperwiki library
-# scraperwiki.sqlite.save(unique_keys=['name'], data={"name": "susan", "occupation": "software developer"})
-#
-# # An arbitrary query against the database
-# scraperwiki.sql.select("* from data where 'name'='peter'")
-
-# You don't have to do things with the ScraperWiki and lxml libraries. You can use whatever libraries are installed
-# on morph.io for Python (https://github.com/openaustralia/morph-docker-python/blob/master/pip_requirements.txt) and all that matters
-# is that your final data is written to an Sqlite database called data.sqlite in the current working directory which
-# has at least a table called data.
+def findItem(itemName):
+    itemName.replace(" ", "+")      
+    link = 'http://www.flipkart.com/search/a/all?query= {0}&vertical=all&dd=0&autosuggest[as]=off&autosuggest[as-submittype]=entered&autosuggest[as-grouprank]=0&autosuggest[as-overallrank]=0&autosuggest[orig-query]=&autosuggest[as-shown]=off&Search=%C2%A0&otracker=start&_r=YSWdYULYzr4VBYklfpZRbw--&_l=pMHn9vNCOBi05LKC_PwHFQ--&ref=a2c6fadc-2e24-4412-be6a-ce02c9707310&selmitem=All+Categories'.format(itemName)
+    r = urllib2.Request(link, headers={"User-Agent": "Python-urlli~"})
+    try:
+        response = urllib2.urlopen(r)
+    except:
+        print "Internet connection error"
+        return     
+    thePage = response.read()
+    soup = bs4.BeautifulSoup(thePage)
+    firstBlockSoup = soup.find('div', attrs={'class': 'size1of4 fk-medium-atom unit'})
+    if not firstBlockSoup:
+        print "Item Not Found"
+        return
+    else:
+        print "Item found"
+        return
